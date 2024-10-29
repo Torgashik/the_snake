@@ -161,8 +161,10 @@ class Apple(GameObject):
                 randint(0, grid_width - 1) * GRID_SIZE,
                 randint(0, grid_height - 1) * GRID_SIZE,
             )
-            if (not self.snake or
-                    not self.snake.is_position_inside_snake(self.position)):
+            if (
+                    not self.snake
+                    or not self.snake.is_position_inside_snake(self.position)
+            ):
                 break
 
     def draw(self):
