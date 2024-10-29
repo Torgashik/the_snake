@@ -20,7 +20,7 @@ screen = pygame.display.set_mode(
     (SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32
 )  # Установка размера экрана
 pygame.display.set_caption("Змейка")  # Установка заголовка окна
-clock = pygame.time.Clock()  # Создание объекта часов для управления частотой кадров
+clock = pygame.time.Clock()  # Создание объекта часов
 
 
 class GameObject:
@@ -33,11 +33,12 @@ class GameObject:
             grid_width (int): Ширина сетки в клетках.
             grid_height (int): Высота сетки в клетках.
         """
-        self.position = ((grid_width // 2) * GRID_SIZE, (grid_height // 2) * GRID_SIZE)
+        self.position = ((grid_width // 2) * GRID_SIZE,
+                         (grid_height // 2) * GRID_SIZE)
         self.body_color = None
 
     def draw(self):
-        """Метод для рисования объекта на экране. (для наследуемых объектов)"""
+        """Метод для рисования объекта на экране."""
         pass
 
 
@@ -55,7 +56,7 @@ class Snake(GameObject):
         self.length = 1  # Начальная длина змейки
         self.positions = [self.position]  # Начальная позиция головы змейки
         self.direction = RIGHT  # Начальное направление
-        self.next_direction = None  # Направление, в которое змейка должна двигаться
+        self.next_direction = None
         self.body_color = SNAKE_COLOR  # Цвет тела змейки
 
     def update_direction(self):
@@ -91,12 +92,12 @@ class Snake(GameObject):
         """Рисование змейки на экране."""
         for position in self.positions[:-1]:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
-            pygame.draw.rect(screen, self.body_color, rect)  # Рисуем тело змейки
-            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)  # Рисуем границу клетки
+            pygame.draw.rect(screen, self.body_color, rect)
+            pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)  # Рисуем голову змейки
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)  # Рисуем границу головы
+        pygame.draw.rect(screen, self.body_color, head_rect)
+        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
         if hasattr(self, "last"):
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
@@ -126,7 +127,7 @@ class Snake(GameObject):
             position (tuple): Координаты позиции для проверки.
 
         Возвращает:
-            bool: True, если позиция находится внутри тела змейки, иначе False.
+            bool: True, если позиция находится внутри тела змейки.
         """
         return position in self.positions
 
@@ -134,21 +135,22 @@ class Snake(GameObject):
 class Apple(GameObject):
     """Класс, представляющий яблоко."""
 
-    def __init__(self, grid_width=GRID_WIDTH, grid_height=GRID_HEIGHT, snake=None):
+    def __init__(self, grid_width=GRID_WIDTH,
+                 grid_height=GRID_HEIGHT, snake=None):
         """Инициализация яблока.
 
         Аргументы:
             grid_width (int): Ширина сетки в клетках.
             grid_height (int): Высота сетки в клетках.
-            snake (Snake): Объект змейки, чтобы не спавнить яблоко внутри змейки.
+            snake (Snake): Объект змейки.
         """
         super().__init__(grid_width, grid_height)
         self.body_color = APPLE_COLOR  # Цвет яблока
         self.snake = snake  # Ссылка на объект змейки
-        self.randomize_position(grid_width, grid_height)  # Установка случайной позиции
+        self.randomize_position(grid_width, grid_height)
 
     def randomize_position(self, grid_width, grid_height):
-        """Установка случайной позиции яблока, избегая пересечения со змейкой.
+        """Установка случайной позиции яблока.
 
         Аргументы:
             grid_width (int): Ширина сетки в клетках.
@@ -159,14 +161,15 @@ class Apple(GameObject):
                 randint(0, grid_width - 1) * GRID_SIZE,
                 randint(0, grid_height - 1) * GRID_SIZE,
             )
-            if not self.snake or not self.snake.is_position_inside_snake(self.position):
+            if (not self.snake or
+                    not self.snake.is_position_inside_snake(self.position)):
                 break
 
     def draw(self):
         """Рисование яблока на экране."""
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
         pygame.draw.rect(screen, self.body_color, rect)  # Рисуем яблоко
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)  # Рисуем границу яблока
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 class Rock(GameObject):
@@ -181,7 +184,7 @@ class Rock(GameObject):
         """
         super().__init__(grid_width, grid_height)
         self.body_color = ROCK_COLOR  # Цвет камня
-        self.randomize_position(grid_width, grid_height)  # Установка случайной позиции
+        self.randomize_position(grid_width, grid_height)
 
     def randomize_position(self, grid_width, grid_height):
         """Установка случайной позиции камня.
@@ -200,15 +203,15 @@ class Rock(GameObject):
     def draw(self):
         """Рисование камня на экране."""
         rect = pygame.Rect(self.position, (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, rect)  # Рисуем камень
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)  # Рисуем границу камня
+        pygame.draw.rect(screen, self.body_color, rect)
+        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
 
 def handle_keys(game_object):
     """Обработка нажатий клавиш для управления игровым объектом.
 
     Аргументы:
-        game_object (GameObject): Игровой объект, который нужно управлять (например, змейка).
+        game_object (GameObject): Игровой объект.
     """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -230,7 +233,7 @@ def main():
     pygame.init()  # Инициализация Pygame
 
     snake_obj = Snake(GRID_WIDTH, GRID_HEIGHT)  # Создание объекта змейки
-    apple_obj = Apple(GRID_WIDTH, GRID_HEIGHT, snake_obj)  # Создание объекта яблока
+    apple_obj = Apple(GRID_WIDTH, GRID_HEIGHT, snake_obj)
     rock_obj = Rock(GRID_WIDTH, GRID_HEIGHT)  # Создание объекта камня
 
     while True:
